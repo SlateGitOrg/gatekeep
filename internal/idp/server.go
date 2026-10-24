@@ -225,7 +225,8 @@ func (s *Server) authorize(w http.ResponseWriter, r *http.Request) {
 		if st := q.Get("state"); st != "" {
 			v.Set("state", st)
 		}
-		http.Redirect(w, r, redirect+"?"+v.Encode(), http.StatusFound)
+		// redirect is an exact match against the client's registered URIs.
+		http.Redirect(w, r, redirect+"?"+v.Encode(), http.StatusFound) //nolint:gosec // validated above
 	}
 	switch {
 	case q.Get("response_type") != "code":

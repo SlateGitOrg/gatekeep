@@ -42,7 +42,9 @@ func (g *Gateway) cookiePrefix() string {
 }
 
 func (g *Gateway) setCookie(w http.ResponseWriter, name, value string, maxAge int) {
-	http.SetCookie(w, &http.Cookie{
+	// Secure is set whenever public_url is https; plain http is only
+	// permitted for loopback development (enforced in New).
+	http.SetCookie(w, &http.Cookie{ //nolint:gosec // see comment above
 		Name: name, Value: value, Path: "/", MaxAge: maxAge,
 		Secure: g.secure, HttpOnly: true, SameSite: http.SameSiteLaxMode,
 	})

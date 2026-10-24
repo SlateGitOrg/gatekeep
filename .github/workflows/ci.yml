@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: gofmt
+        run: make fmt-check
+      - name: go vet
+        run: make vet
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.13.2
+
+  test:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: race tests + coverage gate (>= 85% core)
+        run: make test
+      - name: policy unit tests on the example config
+        run: go run ./cmd/gatekeep policy-test --config examples/gatekeep.yaml --cases examples/policy-cases.yaml
+      - name: offline end-to-end demo
+        run: make demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: make build

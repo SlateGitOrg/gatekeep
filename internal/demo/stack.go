@@ -136,7 +136,7 @@ func StartStack(ctx context.Context, o StackOptions) (st *Stack, err error) {
 		return nil, err
 	}
 
-	var gwHandler, idpHandler http.Handler = http.NotFoundHandler(), http.NotFoundHandler()
+	gwHandler, idpHandler := http.NotFoundHandler(), http.NotFoundHandler()
 	gwTS := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { gwHandler.ServeHTTP(w, r) }))
 	idpTS := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { idpHandler.ServeHTTP(w, r) }))
 	st.servers = append(st.servers, gwTS, idpTS)

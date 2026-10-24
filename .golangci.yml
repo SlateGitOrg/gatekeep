@@ -1,0 +1,35 @@
+version: "2"
+run:
+  timeout: 5m
+  tests: true
+linters:
+  default: standard
+  enable:
+    - bodyclose
+    - errorlint
+    - gosec
+    - misspell
+    - nilerr
+    - noctx
+    - unconvert
+    - usestdlibvars
+    - copyloopvar
+  settings:
+    errcheck:
+      # CLI output to stdout/stderr: a failed terminal write is not actionable.
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+    gosec:
+      excludes:
+        - G304 # file paths come from operator-controlled config/flags by design
+  exclusions:
+    rules:
+      # Tests build requests without contexts and deliberately construct
+      # weak keys / temp paths to exercise rejection paths.
+      - path: _test\.go
+        linters: [noctx, gosec]
+formatters:
+  enable:
+    - gofmt

@@ -157,7 +157,7 @@ func (r *runner) check(cond bool, what string) {
 
 // api makes a JSON request with the browser's cookies.
 func (r *runner) api(b *demo.Browser, method, p string, hdr map[string]string) (int, map[string]any) {
-	req, _ := http.NewRequest(method, r.url(p), nil)
+	req, _ := http.NewRequestWithContext(context.Background(), method, r.url(p), nil)
 	req.Header.Set("Accept", "application/json")
 	for k, v := range hdr {
 		req.Header.Set(k, v)

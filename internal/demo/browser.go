@@ -5,6 +5,7 @@
 package demo
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -80,7 +81,7 @@ func (b *Browser) Do(method, rawURL, contentType string, body io.Reader) (*Respo
 		return nil, err
 	}
 	for range b.MaxHops {
-		req, err := http.NewRequest(method, u.String(), body)
+		req, err := http.NewRequestWithContext(context.Background(), method, u.String(), body)
 		if err != nil {
 			return nil, err
 		}
@@ -172,5 +173,9 @@ func (b *Browser) SetCookie(u, name, value string) {
 	if err != nil {
 		return
 	}
-	b.Client.Jar.SetCookies(pu, []*http.Cookie{{Name: name, Value: value, Path: "/", Secure: pu.Scheme == "https"}})
+	// This writes into the scripted client's own jar (simulating an attacker
+	// who copied a cookie); it never sets a cookie on a server response.
+	b.Client.Jar.SetCookies(pu, []*http.Cookie{{ //nolint:gosec // client-side jar, Secure mirrors the URL scheme
+		Name: name, Value: value, Path: "/", Secure: pu.Scheme == "https", HttpOnly: true, SameSite: http.SameSiteLaxMode,
+	}})
 }

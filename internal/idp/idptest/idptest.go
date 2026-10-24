@@ -3,6 +3,7 @@
 package idptest
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -49,7 +50,7 @@ type Server struct {
 // redirectURIs.
 func Start(t testing.TB, redirectURIs []string, configure func(*idp.Options)) *Server {
 	t.Helper()
-	var h http.Handler = http.NotFoundHandler()
+	h := http.NotFoundHandler()
 	ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { h.ServeHTTP(w, r) }))
 	t.Cleanup(ts.Close)
 	keys, err := idp.NewKeyRing(jose.ES256, 1)
@@ -82,7 +83,11 @@ var ErrLoginFailed = errors.New("idptest: login rejected")
 // returns the redirect target the IdP sends the browser to. hc must not
 // follow redirects automatically.
 func Login(hc *http.Client, authURL, username, password string) (*url.URL, error) {
-	resp, err := hc.Get(authURL)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, authURL, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := hc.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +103,12 @@ func Login(hc *http.Client, authURL, username, password string) (*url.URL, error
 	au, _ := url.Parse(authURL)
 	loginURL := au.ResolveReference(&url.URL{Path: "login"})
 	form := url.Values{"req": {string(m[1])}, "username": {username}, "password": {password}}
-	resp, err = hc.Post(loginURL.String(), "application/x-www-form-urlencoded", strings.NewReader(form.Encode()))
+	req, err = http.NewRequestWithContext(context.Background(), http.MethodPost, loginURL.String(), strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err = hc.Do(req)
 	if err != nil {
 		return nil, err
 	}

@@ -233,7 +233,7 @@ func TestStatusWriter(t *testing.T) {
 		t.Fatal("default")
 	}
 	_, _ = sw.Write([]byte("x"))
-	sw.WriteHeader(500) // ignored after body
+	sw.WriteHeader(http.StatusInternalServerError) // ignored after body
 	sw.Flush()
 	if sw.status() != 200 || sw.Unwrap() != rec {
 		t.Fatal("status writer")
