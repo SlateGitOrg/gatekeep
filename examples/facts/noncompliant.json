@@ -1,0 +1,7 @@
+{
+  "os_version": "6.8",
+  "disk_encrypted": false,
+  "firewall_enabled": true,
+  "screen_lock": false,
+  "patch_age_days": 45
+}

@@ -1,0 +1,89 @@
+# gatekeep example configuration (used by scripts/quickstart.sh, which copies
+# it into .gatekeep/ next to the generated certificate and device keys).
+# Secrets are NOT in this file: they come from the environment variables
+# named by oidc.client_secret_env and session.secrets_env.
+listen: 127.0.0.1:8443
+public_url: https://127.0.0.1:8443
+tls:
+  cert_file: tls.crt
+  key_file: tls.key
+
+oidc:
+  issuer: https://127.0.0.1:9443
+  client_id: gatekeep
+  client_secret_env: GATEKEEP_CLIENT_SECRET
+  scopes: [openid, email, profile, groups]
+  ca_file: tls.crt          # trust the self-signed dev certificate
+  leeway: 30s
+  max_token_age: 10m
+
+session:
+  cookie_name: gatekeep     # becomes __Host-gatekeep over https
+  secrets_env: GATEKEEP_SESSION_SECRETS   # comma-separated; first one seals
+  absolute_timeout: 8h
+  idle_timeout: 1h
+  login_ttl: 10m
+
+posture:
+  max_age: 10m              # posture older than this is "stale"
+  assertion_max_age: 2m     # signed assertions must be this fresh on arrival
+  pairing_ttl: 5m
+  devices:
+    - id: alice-laptop
+      owner: user-alice
+      public_key_file: devices/alice-laptop.pub.pem
+
+upstream_assertion:
+  key_file: upstream.key    # ES256 key signing X-Gatekeep-Assertion
+
+audit:
+  file: audit.jsonl
+
+security_headers:
+  hsts_max_age: 31536000
+
+policy:
+  cost_limit: 10000
+
+routes:
+  - name: public
+    path_prefix: /public/
+    upstream: http://127.0.0.1:9000
+    anonymous: true
+
+  - name: wiki
+    path_prefix: /wiki/
+    upstream: http://127.0.0.1:9000
+    rules:
+      - name: employees
+        effect: allow
+        expr: identity.email_verified && identity.email.endsWith("@example.test")
+      - name: contractors-read-only
+        effect: allow
+        expr: '"contractors" in identity.groups && request.method in ["GET", "HEAD"]'
+
+  - name: admin
+    path_prefix: /admin/
+    upstream: http://127.0.0.1:9000
+    require_device: true
+    rules:
+      - name: admins-on-compliant-devices
+        effect: allow
+        expr: >-
+          "admins" in identity.groups && device.disk_encrypted && device.firewall_enabled
+          && device.patch_age_days <= 14 && identity.auth_age < duration("12h")
+      - name: no-deletes-without-screen-lock
+        effect: deny
+        expr: request.method == "DELETE" && !device.screen_lock
+
+  - name: api
+    path_prefix: /api/
+    upstream: http://127.0.0.1:9000
+    strip_prefix: true
+    rules:
+      - name: engineers
+        effect: allow
+        expr: sets.intersects(identity.groups, ["eng", "admins"])
+      - name: office-network-writes
+        effect: deny
+        expr: request.method != "GET" && !request.ip.in_cidr("127.0.0.0/8")

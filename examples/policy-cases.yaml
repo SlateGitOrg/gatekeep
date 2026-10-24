@@ -1,0 +1,77 @@
+# Policy unit tests: `gatekeep policy-test --config examples/gatekeep.yaml --cases examples/policy-cases.yaml`
+cases:
+  - name: employee reads wiki
+    route: wiki
+    expect: allow
+    rule: employees
+    input:
+      identity: {authenticated: true, sub: user-bob, email: bob@example.test, email_verified: true, groups: [eng]}
+      request: {method: GET, path: /wiki/handbook}
+  - name: unverified email cannot read wiki
+    route: wiki
+    expect: deny
+    input:
+      identity: {authenticated: true, sub: u9, email: mallory@example.test, email_verified: false}
+      request: {method: GET, path: /wiki/}
+  - name: contractor reads wiki
+    route: wiki
+    expect: allow
+    rule: contractors-read-only
+    input:
+      identity: {authenticated: true, sub: user-carol, email: carol@contractor.test, email_verified: true, groups: [contractors]}
+      request: {method: GET, path: /wiki/}
+  - name: contractor cannot edit wiki
+    route: wiki
+    expect: deny
+    input:
+      identity: {authenticated: true, sub: user-carol, email: carol@contractor.test, email_verified: true, groups: [contractors]}
+      request: {method: POST, path: /wiki/edit}
+  - name: admin on compliant laptop
+    route: admin
+    expect: allow
+    rule: admins-on-compliant-devices
+    input:
+      identity: {authenticated: true, sub: user-alice, groups: [admins], auth_age: 1h}
+      device: {present: true, id: alice-laptop, disk_encrypted: true, firewall_enabled: true, screen_lock: true, patch_age_days: 3, age: 2m}
+      request: {method: GET, path: /admin/}
+  - name: admin with unpatched laptop
+    route: admin
+    expect: deny
+    input:
+      identity: {authenticated: true, sub: user-alice, groups: [admins], auth_age: 1h}
+      device: {present: true, disk_encrypted: true, firewall_enabled: true, patch_age_days: 30}
+      request: {method: GET, path: /admin/}
+  - name: admin with stale login
+    route: admin
+    expect: deny
+    input:
+      identity: {authenticated: true, sub: user-alice, groups: [admins], auth_age: 13h}
+      device: {present: true, disk_encrypted: true, firewall_enabled: true, patch_age_days: 1}
+      request: {method: GET, path: /admin/}
+  - name: delete without screen lock is denied even for admins
+    route: admin
+    expect: deny
+    rule: no-deletes-without-screen-lock
+    input:
+      identity: {authenticated: true, sub: user-alice, groups: [admins], auth_age: 1h}
+      device: {present: true, disk_encrypted: true, firewall_enabled: true, screen_lock: false, patch_age_days: 1}
+      request: {method: DELETE, path: /admin/users/7}
+  - name: engineer calls api
+    route: api
+    expect: allow
+    input:
+      identity: {authenticated: true, sub: user-bob, groups: [eng]}
+      request: {method: GET, path: /api/v1/builds, ip: 203.0.113.7}
+  - name: api write from outside office network
+    route: api
+    expect: deny
+    rule: office-network-writes
+    input:
+      identity: {authenticated: true, sub: user-bob, groups: [eng]}
+      request: {method: POST, path: /api/v1/builds, ip: 203.0.113.7}
+  - name: api write from office network
+    route: api
+    expect: allow
+    input:
+      identity: {authenticated: true, sub: user-bob, groups: [eng]}
+      request: {method: POST, path: /api/v1/builds, ip: 127.0.0.1}

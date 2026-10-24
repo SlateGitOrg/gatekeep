@@ -7,6 +7,8 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -21,6 +23,7 @@ import (
 
 	"github.com/archit2501/gatekeep/internal/audit"
 	"github.com/archit2501/gatekeep/internal/demo"
+	"github.com/archit2501/gatekeep/internal/gateway"
 	"github.com/archit2501/gatekeep/internal/idp/idptest"
 	"github.com/archit2501/gatekeep/internal/jose"
 	"github.com/archit2501/gatekeep/internal/oidc"
@@ -28,11 +31,47 @@ import (
 
 func main() {
 	auditOut := flag.String("audit-out", "", "also write the audit log to this file")
+	upstream := flag.String("upstream", "", "instead of the demo, serve the whoami upstream on this address")
+	gk := flag.String("gatekeep", "https://127.0.0.1:8443", "gatekeep public URL (upstream mode)")
+	ca := flag.String("ca", "", "CA certificate trusted for gatekeep's JWKS (upstream mode)")
 	flag.Parse()
-	if err := run(os.Stdout, *auditOut); err != nil {
+	var err error
+	if *upstream != "" {
+		err = serveUpstream(*upstream, *gk, *ca)
+	} else {
+		err = run(os.Stdout, *auditOut)
+	}
+	if err != nil {
 		fmt.Fprintln(os.Stderr, "gatekeep-demo:", err)
 		os.Exit(1)
 	}
+}
+
+// serveUpstream runs the whoami app standalone for the quickstart.
+func serveUpstream(addr, gatekeepURL, caFile string) error {
+	pool, err := x509.SystemCertPool()
+	if err != nil {
+		pool = x509.NewCertPool()
+	}
+	if caFile != "" {
+		b, err := os.ReadFile(caFile)
+		if err != nil {
+			return err
+		}
+		pool.AppendCertsFromPEM(b)
+	}
+	hc := &http.Client{Timeout: 10 * time.Second, Transport: &http.Transport{
+		TLSClientConfig: &tls.Config{RootCAs: pool, MinVersion: tls.VersionTLS12},
+	}}
+	auds := []string{}
+	for _, n := range []string{"public", "wiki", "admin", "api"} {
+		auds = append(auds, gateway.AssertionAudience(n))
+	}
+	app := &demo.WhoAmI{Name: "whoami", Issuer: gatekeepURL, Audiences: auds,
+		Keys: oidc.NewRemoteKeySet(gatekeepURL+"/.gatekeep/jwks.json", hc)}
+	fmt.Printf("whoami upstream on http://%s (trusting assertions from %s)\n", addr, gatekeepURL)
+	srv := &http.Server{Addr: addr, Handler: app, ReadHeaderTimeout: 10 * time.Second}
+	return srv.ListenAndServe()
 }
 
 // demoClock starts at a fixed instant and advances with real time plus any

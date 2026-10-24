@@ -1,0 +1,7 @@
+{
+  "os_version": "15.1",
+  "disk_encrypted": true,
+  "firewall_enabled": true,
+  "screen_lock": true,
+  "patch_age_days": 3
+}
