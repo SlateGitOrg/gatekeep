@@ -283,7 +283,7 @@ scripts/        quickstart.sh, coverage-gate.sh
 
 Code size (non-blank, non-comment lines of non-test Go), measured with
 `find internal cmd -name '*.go' ! -name '*_test.go' -exec cat {} + | grep -v -E '^\s*($|//)' | wc -l`:
-5929 lines of source. The same count over `*_test.go` gives 3457 lines of tests.
+**5929** lines of source. With `-name '*_test.go'` in place of `! -name '*_test.go'` the same command reports **3457** lines of tests.
 
 ## License
 
