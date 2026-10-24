@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"bufio"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -187,6 +188,33 @@ func TestSanitizeOutbound(t *testing.T) {
 	g.stripUpstreamCookies(resp)
 	if v := resp.Values("Set-Cookie"); len(v) != 1 || v[0] != "app=1" {
 		t.Fatalf("set-cookie %v", v)
+	}
+}
+
+// WSGI/CGI/Rack upstreams map "_" and "-" to the same variable
+// (HTTP_X_GATEKEEP_USER), so underscore spellings of identity headers must be
+// stripped too.
+func TestSanitizeOutboundUnderscoreSpoofing(t *testing.T) {
+	g := testGateway(t)
+	raw := "GET / HTTP/1.1\r\nHost: app\r\n" +
+		"X_Gatekeep_User: admin\r\n" +
+		"x-gatekeep_email: a@b\r\n" +
+		"X-GATEKEEP_GROUPS: admins\r\n" +
+		"x_gatekeep-assertion: forged\r\n" +
+		"X_Forwarded_App: keep\r\n" +
+		"X-Gatekeeper: keep\r\n\r\n"
+	r, err := http.ReadRequest(bufio.NewReader(strings.NewReader(raw)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	g.sanitizeOutbound(r.Header)
+	for k := range r.Header {
+		if strings.HasPrefix(strings.ToLower(strings.ReplaceAll(k, "_", "-")), "x-gatekeep-") {
+			t.Errorf("spoofable header %q reached the upstream", k)
+		}
+	}
+	if len(r.Header) != 2 {
+		t.Fatalf("unrelated headers dropped: %v", r.Header)
 	}
 }
 

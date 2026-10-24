@@ -87,12 +87,24 @@ func (g *Gateway) newProxy(route *Route) *httputil.ReverseProxy {
 	}
 }
 
-// sanitizeOutbound removes spoofable identity headers and gatekeep's own
-// cookies so the session cookie never reaches an upstream.
+// isIdentityHeader reports whether name is, or could be read by an upstream
+// as, one of gatekeep's X-Gatekeep-* headers. The match is case-insensitive
+// and treats "_" as "-", because WSGI/CGI/Rack upstreams map both
+// X_Gatekeep_User and X-Gatekeep-User to HTTP_X_GATEKEEP_USER.
+func isIdentityHeader(name string) bool {
+	if len(name) < len(headerPrefix) {
+		return false
+	}
+	return strings.EqualFold(strings.ReplaceAll(name[:len(headerPrefix)], "_", "-"), headerPrefix)
+}
+
+// sanitizeOutbound removes spoofable identity headers (in any spelling an
+// upstream could conflate with X-Gatekeep-*) and gatekeep's own cookies so
+// the session cookie never reaches an upstream.
 func (g *Gateway) sanitizeOutbound(h http.Header) {
 	for k := range h {
-		if strings.HasPrefix(http.CanonicalHeaderKey(k), headerPrefix) {
-			h.Del(k)
+		if isIdentityHeader(k) {
+			delete(h, k) // the raw key: h.Del would re-canonicalise it
 		}
 	}
 	cookies := h.Values("Cookie")

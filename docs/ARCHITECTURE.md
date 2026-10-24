@@ -53,7 +53,7 @@ It trusts nothing that arrives from the browser, the agent or the network unless
 | 7 | `require_device` needs fresh posture | 403 `device_required` / `posture_stale` |
 | 8 | CEL policy (deny-overrides) | 403 `denied_by_rule` / `deny_rule_error` / `no_matching_allow` / `policy_cost_exceeded` |
 | 9 | Re-issue the cookie if `LastSeen` is older than the touch interval (sliding idle timeout) | — |
-| 10 | Reverse proxy: strip `X-Gatekeep-*` and gatekeep cookies, add identity headers plus a signed ES256 assertion; on the response, add missing security headers, remove `Server`/`X-Powered-By`, drop upstream `Set-Cookie` that would shadow gatekeep cookies | 502 `upstream_error` |
+| 10 | Reverse proxy: strip `X-Gatekeep-*` (any case, `_` or `-`) and gatekeep cookies, add identity headers plus a signed ES256 assertion; on the response, add missing security headers, remove `Server`/`X-Powered-By`, drop upstream `Set-Cookie` that would shadow gatekeep cookies | 502 `upstream_error` |
 | 11 | A deferred audit record with status and latency, appended to the chain | — |
 
 ## 3. Login (authorization code + PKCE)
