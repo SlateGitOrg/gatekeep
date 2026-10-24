@@ -90,6 +90,7 @@ func TestSafeReturnTo(t *testing.T) {
 		"https://evil.test/":     "/",
 		"javascript:alert(1)":    "/",
 		"/.gatekeep/logout":      "/",
+		"/.gatekeep/device":      "/.gatekeep/device",
 		"/ok\r\nSet-Cookie: x=1": "/",
 		"/a b":                   "/a%20b",
 	}

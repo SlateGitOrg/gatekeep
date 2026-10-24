@@ -112,8 +112,12 @@ func (g *Gateway) startLogin(w http.ResponseWriter, r *http.Request, returnTo st
 }
 
 // safeReturnTo only allows local absolute paths, preventing open redirects
-// via //evil.example, /\evil.example or absolute URLs.
+// via //evil.example, /\evil.example or absolute URLs. Inside gatekeep's own
+// namespace only the device page is a valid destination.
 func safeReturnTo(rt string) string {
+	if rt == reservedPrefix+"device" {
+		return rt
+	}
 	if rt == "" || rt[0] != '/' || strings.HasPrefix(rt, "//") || strings.HasPrefix(rt, "/\\") ||
 		strings.HasPrefix(rt, reservedPrefix) || strings.ContainsAny(rt, "\r\n\t") {
 		return "/"

@@ -342,6 +342,12 @@ func TestDevicePostureLifecycle(t *testing.T) {
 	if st, _, _ := e.api(b, http.MethodDelete, "/admin/item", nil, map[string]string{"Origin": e.st.GatewayURL}); st != http.StatusOK {
 		t.Fatalf("delete: %d", st)
 	}
+	// A signed-out visit to the device page returns there after login.
+	fresh := e.browser()
+	r, _ = fresh.Login(e.url("/.gatekeep/device"), "bob", "bob-pw")
+	if r.Status != 200 || !strings.Contains(r.Body, "Pair a device") {
+		t.Fatalf("device page after login: %d", r.Status)
+	}
 	// Device page renders for the signed-in user.
 	r, _ = b.Navigate(e.url("/.gatekeep/device"))
 	if r.Status != 200 || !strings.Contains(r.Body, "fresh (alice-laptop)") {
