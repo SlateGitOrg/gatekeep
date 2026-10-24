@@ -110,6 +110,14 @@ func NewClient(ctx context.Context, hc *http.Client, cfg Config) (*Client, error
 	}, nil
 }
 
+// VerifyIDToken validates an ID token against the expected nonce.
+func (c *Client) VerifyIDToken(ctx context.Context, raw, nonce string) (*IDTokenClaims, error) {
+	return c.Verifier.Verify(ctx, raw, nonce)
+}
+
+// Issuer returns the verified issuer identifier.
+func (c *Client) Issuer() string { return c.meta.Issuer }
+
 // Metadata returns the discovered provider metadata.
 func (c *Client) Metadata() Metadata { return c.meta }
 

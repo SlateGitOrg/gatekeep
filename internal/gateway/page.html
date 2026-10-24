@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}} — gatekeep</title>
+<style>
+:root{color-scheme:light dark;--bg:#f5f5f3;--fg:#1b1b1b;--card:#fff;--line:#d9d9d6;--muted:#5f5f5f;--accent:#1f4e79}
+@media (prefers-color-scheme:dark){:root{--bg:#141414;--fg:#ececec;--card:#1e1e1e;--line:#333;--muted:#a3a3a3;--accent:#7fb2e5}}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);margin:0;min-height:100vh;display:grid;place-items:center}
+main{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1.75rem 2rem;width:min(34rem,calc(100vw - 32px));box-sizing:border-box}
+h1{font-size:1.3rem;margin:0 0 .75rem}
+p{line-height:1.5}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.75rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.meta{color:var(--muted);font-size:.85rem}
+a,button{color:var(--accent)}
+button{background:var(--accent);color:var(--card);border:0;border-radius:4px;padding:.55rem 1rem;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>{{.Title}}</h1>
+<p>{{.Message}}</p>
+{{if .Code}}<pre>{{.Code}}</pre>{{end}}
+{{if .Form}}<form method="post" action="{{.Form.Action}}"><input type="hidden" name="csrf" value="{{.Form.CSRF}}"><button type="submit">{{.Form.Button}}</button></form>{{end}}
+{{if .Link}}<p><a href="{{.Link}}">{{.LinkText}}</a></p>{{end}}
+{{if .Reason}}<p class="meta">Reason: <code>{{.Reason}}</code>{{if .RequestID}} · Request ID: <code>{{.RequestID}}</code>{{end}}</p>{{end}}
+</main>
+</body>
+</html>
