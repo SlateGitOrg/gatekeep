@@ -102,14 +102,17 @@ func (j *JWK) UnmarshalJSON(b []byte) error {
 		return fmt.Errorf("jose: decode jwk: %w", err)
 	}
 	*j = JWK(p)
+	// The alg check comes first and reports ErrUnsupportedKey: a key bound to
+	// an algorithm gatekeep does not use with this kty (RSA-OAEP, PS256,
+	// ES384, ...) is a key gatekeep cannot use, not a malformed one.
+	if j.Alg != "" && Algorithm(j.Alg) != j.Algorithm() {
+		return fmt.Errorf("%w: jwk alg %q with kty %q", ErrUnsupportedKey, j.Alg, j.Kty)
+	}
 	key, err := j.parse()
 	if err != nil {
 		return err
 	}
 	j.key = key
-	if j.Alg != "" && Algorithm(j.Alg) != j.Algorithm() {
-		return fmt.Errorf("jose: jwk alg %q does not match kty %q", j.Alg, j.Kty)
-	}
 	return nil
 }
 
@@ -180,10 +183,12 @@ type JWKSet struct {
 	Keys []JWK `json:"keys"`
 }
 
-// ParseJWKSet decodes a key set. Keys with an unsupported kty or a "use"
-// other than "sig" are skipped (forward compatibility); malformed keys of a
-// supported type are an error, because silently dropping them hides
-// misconfiguration.
+// ParseJWKSet decodes a key set. Keys gatekeep cannot use are skipped
+// (forward compatibility): a "use" other than "sig" (checked before the key
+// material is even parsed), an unsupported kty or curve, and an "alg" that
+// gatekeep does not pair with the key's kty (for example RSA-OAEP or PS256 on
+// an RSA key). Malformed key material on a usable signing key is an error,
+// because silently dropping it hides misconfiguration.
 func ParseJWKSet(b []byte) (*JWKSet, error) {
 	var raw struct {
 		Keys []json.RawMessage `json:"keys"`
@@ -193,15 +198,21 @@ func ParseJWKSet(b []byte) (*JWKSet, error) {
 	}
 	set := &JWKSet{}
 	for _, r := range raw.Keys {
+		var hdr struct {
+			Use string `json:"use"`
+		}
+		if err := json.Unmarshal(r, &hdr); err != nil {
+			return nil, fmt.Errorf("jose: decode jwk: %w", err)
+		}
+		if hdr.Use != "" && hdr.Use != "sig" {
+			continue
+		}
 		var j JWK
 		if err := json.Unmarshal(r, &j); err != nil {
 			if errors.Is(err, ErrUnsupportedKey) {
 				continue
 			}
 			return nil, err
-		}
-		if j.Use != "" && j.Use != "sig" {
-			continue
 		}
 		set.Keys = append(set.Keys, j)
 	}

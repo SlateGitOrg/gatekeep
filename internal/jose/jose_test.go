@@ -207,6 +207,47 @@ func TestParseJWKSet(t *testing.T) {
 	}
 }
 
+// kb2 returns the n and e members of an RSA signer's public JWK, formatted
+// to be spliced into a JSON object after `"n":"`.
+func kb2(t *testing.T, s *Signer) string {
+	t.Helper()
+	pub := s.Public()
+	return pub.N + `","e":"` + pub.E + `"}`
+}
+
+// A realistic IdP JWKS (Keycloak publishes an RSA-OAEP encryption key next to
+// its RS256 signing key) must not lose the signing key because of keys
+// gatekeep does not use.
+func TestParseJWKSetSkipsForeignKeys(t *testing.T) {
+	sig := mustSigner(t, RS256, "sig")
+	ks, _ := json.Marshal(sig.Public())
+	rsaMembers := kb2(t, sig)
+	doc := `{"keys":[` + string(ks) +
+		`,{"kid":"enc","kty":"RSA","use":"enc","alg":"RSA-OAEP","n":"` + rsaMembers +
+		`,{"kid":"enc-junk","kty":"RSA","use":"enc","alg":"RSA-OAEP-256","n":"AA","e":"AA"}` +
+		`,{"kid":"ps","kty":"RSA","use":"sig","alg":"PS256","n":"` + rsaMembers +
+		`,{"kid":"rs384","kty":"RSA","alg":"RS384","n":"` + rsaMembers +
+		`,{"kid":"es384","kty":"EC","crv":"P-256","alg":"ES384","x":"AA","y":"AA"}` +
+		`,{"kid":"confused","kty":"RSA","alg":"ES256","n":"` + rsaMembers +
+		`]}`
+	set, err := ParseJWKSet([]byte(doc))
+	if err != nil {
+		t.Fatalf("whole set rejected: %v", err)
+	}
+	if len(set.Keys) != 1 {
+		t.Fatalf("want only the RS256 signing key, got %d keys", len(set.Keys))
+	}
+	if _, ok := set.Lookup("sig"); !ok {
+		t.Fatal("signing key lost")
+	}
+	// The standalone decoder still refuses a mismatched key, as unsupported.
+	var k JWK
+	err = json.Unmarshal([]byte(`{"kty":"RSA","alg":"PS256","n":"`+rsaMembers), &k)
+	if !errors.Is(err, ErrUnsupportedKey) {
+		t.Fatalf("PS256 jwk: %v", err)
+	}
+}
+
 func TestPEMRoundTrip(t *testing.T) {
 	for _, alg := range []Algorithm{RS256, ES256, EdDSA} {
 		k, _ := GenerateKey(alg)
