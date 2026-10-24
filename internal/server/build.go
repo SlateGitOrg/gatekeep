@@ -133,7 +133,7 @@ func Build(ctx context.Context, cfg *config.Config, d Deps) (*Built, error) {
 		return nil, err
 	}
 	rp.Keys.Logger = d.Logger
-	devices, err := loadDevices(cfg)
+	devices, err := LoadDevices(cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -241,7 +241,8 @@ func idpClient(caFile string) (*http.Client, error) {
 	return &http.Client{Transport: tr, Timeout: 10 * time.Second}, nil
 }
 
-func loadDevices(cfg *config.Config) (map[string]posture.Device, error) {
+// LoadDevices reads every enrolled device's public key.
+func LoadDevices(cfg *config.Config) (map[string]posture.Device, error) {
 	out := map[string]posture.Device{}
 	for _, d := range cfg.Posture.Devices {
 		b, err := os.ReadFile(cfg.Resolve(d.PublicKeyFile))
