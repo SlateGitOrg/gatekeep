@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — gatekeep demo IdP</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#f4f4f2;color:#1c1c1c;display:grid;place-items:center;min-height:100vh;margin:0}
+main{background:#fff;border:1px solid #ddd;border-radius:8px;padding:2rem;width:min(22rem,90vw)}
+label{display:block;margin:.75rem 0 .25rem;font-size:.9rem}
+input{width:100%;padding:.5rem;box-sizing:border-box;border:1px solid #bbb;border-radius:4px}
+button{margin-top:1rem;width:100%;padding:.6rem;border:0;border-radius:4px;background:#1f4e79;color:#fff;font-weight:600}
+.err{color:#a40000;font-size:.9rem}
+small{color:#666}
+</style>
+</head>
+<body>
+<main>
+<h1>Sign in</h1>
+<small>Demo identity provider for {{.Client}} at {{.Issuer}}</small>
+{{if .Error}}<p class="err" role="alert">{{.Error}}</p>{{end}}
+<form method="post" action="login">
+<input type="hidden" name="req" value="{{.Req}}">
+<label for="username">Username</label>
+<input id="username" name="username" autocomplete="username" required>
+<label for="password">Password</label>
+<input id="password" name="password" type="password" autocomplete="current-password" required>
+<button type="submit">Sign in</button>
+</form>
+</main>
+</body>
+</html>
