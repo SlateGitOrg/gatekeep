@@ -1,0 +1,13 @@
+# build output
+/bin/
+/dist/
+coverage.out
+coverage.html
+*.test
+# local runtime state
+/.gatekeep/
+/demo-out/
+*.pem
+!examples/**/*.pub.pem
+.env
+.DS_Store
