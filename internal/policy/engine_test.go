@@ -137,15 +137,15 @@ func TestCostLimit(t *testing.T) {
 func TestStdlibExtensions(t *testing.T) {
 	e := mustEngine(t)
 	cases := map[string]bool{
-		`sets.intersects(identity.groups, ["admins", "sre"])`:         true,
-		`identity.email.endsWith("@example.test")`:                    true,
-		`identity.email.lowerAscii().split("@")[1] == "example.test"`: true,
-		`request.time.getHours() >= 9 && request.time.getHours() < 18`: true,
-		`identity.auth_age < duration("1h")`:                          true,
-		`device.age > duration("10m")`:                                false,
+		`sets.intersects(identity.groups, ["admins", "sre"])`:             true,
+		`identity.email.endsWith("@example.test")`:                        true,
+		`identity.email.lowerAscii().split("@")[1] == "example.test"`:     true,
+		`request.time.getHours() >= 9 && request.time.getHours() < 18`:    true,
+		`identity.auth_age < duration("1h")`:                              true,
+		`device.age > duration("10m")`:                                    false,
 		`request.path.startsWith("/admin/") && request.query["q"] == "1"`: true,
-		`"::ffff:10.1.2.3".in_cidr("10.0.0.0/8")`:                     true,
-		`"2001:db8::1".in_cidr("2001:db8::/32")`:                      true,
+		`"::ffff:10.1.2.3".in_cidr("10.0.0.0/8")`:                         true,
+		`"2001:db8::1".in_cidr("2001:db8::/32")`:                          true,
 	}
 	for expr, want := range cases {
 		p, err := e.Compile([]RuleSpec{{Name: "r", Effect: Allow, Expr: expr}})

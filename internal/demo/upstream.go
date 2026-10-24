@@ -41,7 +41,7 @@ type WhoAmIResponse struct {
 	// UserHeader echoes X-Gatekeep-User as received, to show that client
 	// supplied values never reach the upstream.
 	UserHeader string `json:"user_header,omitempty"`
-	Anonymous   bool     `json:"anonymous,omitempty"`
+	Anonymous  bool   `json:"anonymous,omitempty"`
 }
 
 func (a *WhoAmI) ServeHTTP(w http.ResponseWriter, r *http.Request) {

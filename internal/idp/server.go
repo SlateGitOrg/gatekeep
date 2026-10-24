@@ -74,12 +74,12 @@ type Server struct {
 }
 
 type authRequest struct {
-	ClientID      string
-	RedirectURI   string
-	State         string
-	Nonce         string
-	Challenge     string
-	Expires       time.Time
+	ClientID    string
+	RedirectURI string
+	State       string
+	Nonce       string
+	Challenge   string
+	Expires     time.Time
 }
 
 type grant struct {
@@ -251,7 +251,7 @@ func (s *Server) authorize(w http.ResponseWriter, r *http.Request) {
 	s.pending[id] = &authRequest{
 		ClientID: c.ID, RedirectURI: redirect, State: q.Get("state"), Nonce: q.Get("nonce"),
 		Challenge: q.Get("code_challenge"),
-		Expires: s.opts.Now().Add(10 * time.Minute),
+		Expires:   s.opts.Now().Add(10 * time.Minute),
 	}
 	s.mu.Unlock()
 	s.renderLogin(w, id, c.ID, "", http.StatusOK)

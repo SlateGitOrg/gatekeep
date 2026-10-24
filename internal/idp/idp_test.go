@@ -24,7 +24,7 @@ type clock struct {
 	t  time.Time
 }
 
-func (c *clock) Now() time.Time { c.mu.Lock(); defer c.mu.Unlock(); return c.t }
+func (c *clock) Now() time.Time      { c.mu.Lock(); defer c.mu.Unlock(); return c.t }
 func (c *clock) Add(d time.Duration) { c.mu.Lock(); c.t = c.t.Add(d); c.mu.Unlock() }
 
 func authURL(s *idptest.Server, mut func(url.Values)) string {
