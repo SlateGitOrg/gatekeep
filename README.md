@@ -242,7 +242,7 @@ BenchmarkGatewayAuthorizedRequest-8   	   20088	     61582 ns/op	   59873 B/op	 
 
 ## Design decisions (summary)
 
-All rulings, with their cost if wrong, are in [DECISIONS.md](DECISIONS.md). The main ones:
+All design decisions, with their cost if wrong, are in [DECISIONS.md](DECISIONS.md). The main ones:
 
 - **Hand-written JOSE** instead of a JWT library, so the attack surface is explicit: a closed alg list with one key type per alg, no `none`, no `crit`, size caps. CEL comes from `cel-go`, the reference implementation.
 - **Stateless encrypted cookies, plus a small server-side revocation set** for logout. Posture is server-side, keyed by session ID.
