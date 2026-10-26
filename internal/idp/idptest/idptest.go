@@ -14,8 +14,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/archit2501/gatekeep/internal/idp"
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/idp"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // TestIterations keeps PBKDF2 cheap in tests.

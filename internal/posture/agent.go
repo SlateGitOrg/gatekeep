@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // AgentVersion is reported in every assertion.

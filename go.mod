@@ -1,4 +1,4 @@
-module github.com/archit2501/gatekeep
+module github.com/SlateGitOrg/gatekeep
 
 go 1.27.1
 

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 type staticKeys struct{ set jose.JWKSet }

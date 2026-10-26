@@ -8,7 +8,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // Validation errors. Each maps to a stable audit reason via Reason.

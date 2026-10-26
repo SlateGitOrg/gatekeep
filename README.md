@@ -1,5 +1,7 @@
 # gatekeep
 
+[![CI](https://github.com/SlateGitOrg/gatekeep/actions/workflows/ci.yml/badge.svg)](https://github.com/SlateGitOrg/gatekeep/actions/workflows/ci.yml)
+
 An identity-aware reverse proxy in Go, in the BeyondCorp style. Every request is authorized on who is calling, from what device, and what they are asking for. Being on the "inside" of a network grants nothing.
 
 gatekeep sits in front of internal web apps. For each request it:
@@ -13,13 +15,11 @@ gatekeep sits in front of internal web apps. For each request it:
 
 It ships with a **minimal OIDC provider** (`gatekeep-idp`), a **posture agent** (`posture-agent`) and an **offline end-to-end demo** (`make demo`). The repository therefore runs and tests with no external identity provider or network access.
 
-> Educational/portfolio project. It implements the mechanisms carefully and is tested hard, but it has not been audited or deployed in production. See [Limitations](#limitations) and [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md).
+> Educational reference implementation. It implements the mechanisms carefully and is tested hard, but it has not been audited or deployed in production. See [Limitations](#limitations) and [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md).
 
-## Who it is for
+## Why
 
-- Engineers learning how zero-trust access proxies (Google IAP, Pomerium, oauth2-proxy, Cloudflare Access) work inside: the redirect flow, token validation pitfalls, cookie sealing, CSRF, device trust and policy evaluation.
-- Reviewers looking for a compact codebase where every security property has a named test.
-- Anyone who needs a policy-as-code example: `gatekeep policy-test` unit-tests CEL rules against fixture inputs.
+Perimeter networks treat anything inside as trusted, so one stolen laptop or compromised VPN login exposes every internal app. gatekeep puts the decision on each request instead, as access proxies such as Google IAP, Pomerium, oauth2-proxy and Cloudflare Access do. It is a compact codebase where the redirect flow, token validation, cookie sealing, CSRF defenses, device trust and policy evaluation are all visible, and every security property has a named test. `gatekeep policy-test` also unit-tests CEL rules against fixture inputs, so policy is reviewed like code.
 
 ## Architecture
 
@@ -66,7 +66,7 @@ flowchart LR
 
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) covers the request pipeline, the algorithms and their complexity.
 
-## Quickstart
+## Quick start
 
 Requirements: Go 1.27 (see `go.mod`). `make check` also needs [golangci-lint](https://golangci-lint.run) v2.
 
@@ -260,7 +260,6 @@ All rulings, with their cost if wrong, are in [DECISIONS.md](DECISIONS.md). The 
 - The demo uses `httptest` self-signed certificates and a simulated clock. The upstream in the demo is the bundled `whoami` app.
 - CEL cost limits bound evaluation per rule but not the number of rules per route.
 - Benchmarks come from a shared, busy laptop and are indicative only.
-- CI (`.github/workflows/ci.yml`) mirrors `make check` but has not run, because the repository has not been pushed.
 
 ## Roadmap
 
@@ -287,4 +286,4 @@ Code size (non-blank, non-comment lines of non-test Go), measured with
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).

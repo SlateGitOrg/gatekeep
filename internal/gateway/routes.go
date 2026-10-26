@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/archit2501/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
 )
 
 // Route is a protected (or anonymous) upstream mapping.

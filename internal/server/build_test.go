@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/archit2501/gatekeep/internal/config"
-	"github.com/archit2501/gatekeep/internal/idp/idptest"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/config"
+	"github.com/SlateGitOrg/gatekeep/internal/idp/idptest"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
 )
 
 func TestParseSecrets(t *testing.T) {

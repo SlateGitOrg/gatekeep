@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // TokenType is the JOSE "typ" for posture assertions, preventing an ID

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/posture"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/posture"
 )
 
 // Device pairing flow:

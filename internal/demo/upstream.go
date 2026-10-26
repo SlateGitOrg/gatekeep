@@ -8,9 +8,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/gateway"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/gateway"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 // WhoAmI is a demo upstream application. It trusts nothing gatekeep sends

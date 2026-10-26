@@ -25,8 +25,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/posture"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/posture"
 )
 
 func main() {

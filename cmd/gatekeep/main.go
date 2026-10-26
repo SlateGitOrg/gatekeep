@@ -25,12 +25,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/config"
-	"github.com/archit2501/gatekeep/internal/devcert"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/policy"
-	"github.com/archit2501/gatekeep/internal/server"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/config"
+	"github.com/SlateGitOrg/gatekeep/internal/devcert"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/server"
 )
 
 const usage = `usage: gatekeep <command> [flags]

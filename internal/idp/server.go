@@ -21,8 +21,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 // Client is a registered relying party.

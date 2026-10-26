@@ -21,12 +21,12 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/demo"
-	"github.com/archit2501/gatekeep/internal/gateway"
-	"github.com/archit2501/gatekeep/internal/idp/idptest"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/demo"
+	"github.com/SlateGitOrg/gatekeep/internal/gateway"
+	"github.com/SlateGitOrg/gatekeep/internal/idp/idptest"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 func main() {

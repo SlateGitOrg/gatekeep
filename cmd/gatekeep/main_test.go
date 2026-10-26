@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/archit2501/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
 )
 
 func runCmd(t *testing.T, args ...string) (string, error) {

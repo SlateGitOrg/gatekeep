@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/oidc"
-	"github.com/archit2501/gatekeep/internal/session"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/session"
 )
 
 // Session read outcomes (audit reason codes).

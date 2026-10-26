@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/replay"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/replay"
 )
 
 var t0 = time.Date(2026, 10, 24, 12, 0, 0, 0, time.UTC)

@@ -28,7 +28,7 @@ flowchart TB
   GW --> PS
   GW --> PE
   GW --> AL
-  GW -->|HTTP(S) + X-Gatekeep-Assertion| Up
+  GW -->|"HTTP(S) + X-Gatekeep-Assertion"| Up
 ```
 
 gatekeep trusts:

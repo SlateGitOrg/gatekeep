@@ -20,15 +20,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/config"
-	"github.com/archit2501/gatekeep/internal/gateway"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
-	"github.com/archit2501/gatekeep/internal/policy"
-	"github.com/archit2501/gatekeep/internal/posture"
-	"github.com/archit2501/gatekeep/internal/replay"
-	"github.com/archit2501/gatekeep/internal/session"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/config"
+	"github.com/SlateGitOrg/gatekeep/internal/gateway"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/posture"
+	"github.com/SlateGitOrg/gatekeep/internal/replay"
+	"github.com/SlateGitOrg/gatekeep/internal/session"
 )
 
 // Deps are injectable dependencies; zero values use production defaults.

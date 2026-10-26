@@ -26,8 +26,8 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/archit2501/gatekeep/internal/idp"
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/idp"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 type fileConfig struct {

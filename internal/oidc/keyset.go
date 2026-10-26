@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // Bounds applied to the JWKS cache lifetime advertised by the IdP.

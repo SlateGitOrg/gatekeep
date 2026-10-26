@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/archit2501/gatekeep/internal/idp"
+	"github.com/SlateGitOrg/gatekeep/internal/idp"
 )
 
 func TestHashPassword(t *testing.T) {

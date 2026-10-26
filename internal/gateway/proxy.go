@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/policy"
-	"github.com/archit2501/gatekeep/internal/session"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/session"
 )
 
 type ctxKey int

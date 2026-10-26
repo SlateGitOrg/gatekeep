@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/idp"
-	"github.com/archit2501/gatekeep/internal/idp/idptest"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/idp"
+	"github.com/SlateGitOrg/gatekeep/internal/idp/idptest"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 const cb = "https://rp.test/cb"

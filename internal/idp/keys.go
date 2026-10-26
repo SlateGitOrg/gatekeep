@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/archit2501/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
 )
 
 // KeyRing holds the IdP's signing keys. The newest key signs; up to

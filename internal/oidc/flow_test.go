@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/idp/idptest"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/idp/idptest"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 const redirect = "https://rp.test/.gatekeep/callback"

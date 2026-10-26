@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/replay"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/replay"
 )
 
 // Device is an enrolled device.

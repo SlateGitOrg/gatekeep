@@ -15,7 +15,7 @@ import (
 
 	"go.yaml.in/yaml/v3"
 
-	"github.com/archit2501/gatekeep/internal/policy"
+	"github.com/SlateGitOrg/gatekeep/internal/policy"
 )
 
 // Config is the root configuration document.

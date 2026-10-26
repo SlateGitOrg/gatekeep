@@ -9,11 +9,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/idp/idptest"
-	"github.com/archit2501/gatekeep/internal/jose"
-	"github.com/archit2501/gatekeep/internal/oidc"
-	"github.com/archit2501/gatekeep/internal/posture"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/idp/idptest"
+	"github.com/SlateGitOrg/gatekeep/internal/jose"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/posture"
 )
 
 const sessionCookie = "__Host-gatekeep"

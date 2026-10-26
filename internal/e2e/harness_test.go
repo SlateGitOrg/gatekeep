@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/archit2501/gatekeep/internal/audit"
-	"github.com/archit2501/gatekeep/internal/demo"
-	"github.com/archit2501/gatekeep/internal/oidc"
+	"github.com/SlateGitOrg/gatekeep/internal/audit"
+	"github.com/SlateGitOrg/gatekeep/internal/demo"
+	"github.com/SlateGitOrg/gatekeep/internal/oidc"
 )
 
 type clock struct {
