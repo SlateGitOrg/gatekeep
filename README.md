@@ -15,7 +15,7 @@ gatekeep sits in front of internal web apps. For each request it:
 
 It ships with a **minimal OIDC provider** (`gatekeep-idp`), a **posture agent** (`posture-agent`) and an **offline end-to-end demo** (`make demo`). The repository therefore runs and tests with no external identity provider or network access.
 
-> Educational reference implementation. It implements the mechanisms carefully and is tested hard, but it has not been audited or deployed in production. See [Limitations](#limitations) and [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md).
+> Reference implementation, not audited or run in production. The mechanisms are implemented carefully and tested hard. See [Limitations](#limitations) and [docs/THREAT_MODEL.md](docs/THREAT_MODEL.md).
 
 ## Why
 
@@ -282,7 +282,7 @@ scripts/        quickstart.sh, coverage-gate.sh
 
 Code size (non-blank, non-comment lines of non-test Go), measured with
 `find internal cmd -name '*.go' ! -name '*_test.go' -exec cat {} + | grep -v -E '^\s*($|//)' | wc -l`:
-**5929** lines of source. With `-name '*_test.go'` in place of `! -name '*_test.go'` the same command reports **3457** lines of tests.
+**5941** lines of source. With `-name '*_test.go'` in place of `! -name '*_test.go'` the same command reports **3514** lines of tests.
 
 ## License
 
